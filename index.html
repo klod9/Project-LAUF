@@ -309,6 +309,7 @@
             width: 100%; height: auto; border-radius: 12px;
             box-shadow: 0 8px 25px rgba(139,69,89,0.15);
             transition: transform 0.3s ease;
+            cursor: pointer;
         }
 
         .booking-card:hover .booking-screenshot { transform: scale(1.02); }
@@ -325,12 +326,9 @@
             cursor: pointer; transition: all 0.3s ease; font-weight: 400;
             letter-spacing: 0.5px; text-decoration: underline;
             text-underline-offset: 4px; text-decoration-thickness: 1px;
-            display: inline-flex; align-items: center; gap: 0.4rem;
         }
 
-        .btn-see-details:hover { color: var(--blush-rose); transform: translateX(5px); }
-        .btn-see-details::after { content: '→'; font-size: 1.1rem; transition: transform 0.3s ease; }
-        .btn-see-details:hover::after { transform: translateX(5px); }
+        .btn-see-details:hover { color: var(--blush-rose); }
 
         .btn-back {
             font-family: 'Montserrat', sans-serif; padding: 0; font-size: 0.95rem;
@@ -338,12 +336,9 @@
             cursor: pointer; transition: all 0.3s ease; font-weight: 400;
             letter-spacing: 0.3px; text-decoration: underline;
             text-underline-offset: 4px; text-decoration-thickness: 1px;
-            display: inline-flex; align-items: center; gap: 0.4rem; margin-bottom: 2rem;
         }
 
-        .btn-back:hover { color: var(--deep-rose); transform: translateX(-5px); }
-        .btn-back::before { content: '←'; font-size: 1.1rem; transition: transform 0.3s ease; }
-        .btn-back:hover::before { transform: translateX(-5px); }
+        .btn-back:hover { color: var(--deep-rose); }
 
         .page-transition-container { position: relative; width: 100%; overflow: hidden; }
 
@@ -1070,7 +1065,7 @@
 
                 <div class="booking-confirmation">
                     <div class="booking-card">
-                        <img src="booking-screenshot.png" alt="Italianni's Booking Confirmation" class="booking-screenshot">
+                        <img src="booking-screenshot.png" alt="Italianni's Booking Confirmation" class="booking-screenshot" onclick="openMenuImage('booking-screenshot.png')">
                         <p class="booking-caption">Our reservation is confirmed, Honey!</p>
                         <div style="text-align: center;">
                             <button class="btn-see-details" onclick="goToMenu()">See More Details</button>
