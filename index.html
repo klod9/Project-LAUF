@@ -1336,6 +1336,7 @@
         }
 
         function handleCuriousNo(button) {
+            // Keep existing behavior - button jumps randomly
             const modal = document.querySelector('.valentine-modal');
             const modalRect = modal.getBoundingClientRect();
             const maxX = modalRect.width - button.offsetWidth - 40;
@@ -1349,6 +1350,85 @@
             yesBtn.style.fontSize = (sz * 1.08) + 'px';
         }
 
+        // ========================================
+        // MAGNETIC REPULSION FOR NO BUTTONS
+        // ========================================
+        const repulsionDistance = 120; // Distance at which button starts to repel (in pixels)
+        
+        function initMagneticRepulsion() {
+            document.addEventListener('mousemove', (e) => {
+                // Handle intro page No button
+                const introNoBtn = document.querySelector('#intro-page .btn-secondary-clean');
+                if (introNoBtn && introNoBtn.offsetParent !== null) {
+                    applyRepulsion(introNoBtn, e.clientX, e.clientY);
+                }
+                
+                // Handle question page No button
+                const questionNoBtn = document.querySelector('#question-page .btn-no');
+                if (questionNoBtn && questionNoBtn.offsetParent !== null) {
+                    applyRepulsion(questionNoBtn, e.clientX, e.clientY);
+                }
+            });
+        }
+        
+        function applyRepulsion(button, mouseX, mouseY) {
+            const rect = button.getBoundingClientRect();
+            const buttonCenterX = rect.left + rect.width / 2;
+            const buttonCenterY = rect.top + rect.height / 2;
+            
+            // Calculate distance from mouse to button center
+            const distanceX = mouseX - buttonCenterX;
+            const distanceY = mouseY - buttonCenterY;
+            const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+            
+            // Only apply repulsion if mouse is within repulsion distance
+            if (distance < repulsionDistance) {
+                // Make button absolutely positioned if not already
+                if (button.style.position !== 'absolute') {
+                    button.style.position = 'absolute';
+                }
+                
+                // Calculate repulsion strength (stronger when closer)
+                const repulsionStrength = (repulsionDistance - distance) / repulsionDistance;
+                const moveDistance = repulsionStrength * 100; // Max movement of 100px
+                
+                // Calculate direction away from cursor (opposite direction)
+                const angle = Math.atan2(distanceY, distanceX);
+                const moveX = -Math.cos(angle) * moveDistance;
+                const moveY = -Math.sin(angle) * moveDistance;
+                
+                // Get modal bounds
+                const modal = button.closest('.valentine-modal');
+                const modalRect = modal.getBoundingClientRect();
+                
+                // Calculate new position
+                let newLeft = rect.left - modalRect.left + moveX;
+                let newTop = rect.top - modalRect.top + moveY;
+                
+                // Keep button within modal bounds with padding
+                const maxX = modalRect.width - rect.width - 20;
+                const maxY = modalRect.height - rect.height - 20;
+                newLeft = Math.max(20, Math.min(newLeft, maxX));
+                newTop = Math.max(20, Math.min(newTop, maxY));
+                
+                // Apply smooth transition
+                button.style.transition = 'all 0.15s ease-out';
+                button.style.left = newLeft + 'px';
+                button.style.top = newTop + 'px';
+                
+                // Grow Yes button slightly as No button moves away
+                const yesBtn = button.parentElement.querySelector('.btn-primary-clean, .btn-yes');
+                if (yesBtn) {
+                    const currentSize = parseFloat(getComputedStyle(yesBtn).fontSize);
+                    yesBtn.style.fontSize = (currentSize * 1.02) + 'px';
+                    yesBtn.style.transition = 'all 0.2s ease';
+                }
+            }
+        }
+        
+        // Initialize magnetic repulsion on page load
+        initMagneticRepulsion();
+
         function handleYes() {
             const qPage = document.getElementById('question-page');
             qPage.querySelector('.valentine-buttons').style.display = 'none';
@@ -1359,6 +1439,7 @@
         }
 
         function handleNo(button) {
+            // Keep existing behavior - button jumps randomly
             const modal = document.querySelector('.valentine-modal');
             const modalRect = modal.getBoundingClientRect();
             const maxX = modalRect.width - button.offsetWidth - 40;
